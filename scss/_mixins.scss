@@ -19,6 +19,10 @@
   -moz-box-shadow: $shadow;
   -webkit-box-shadow: $shadow;
 }
+@mixin filter($filter) {
+  filter: $filter;
+  -webkit-filter: $filter;
+}
 
 // Headings
 @mixin headings($from: 1, $to: 6) {

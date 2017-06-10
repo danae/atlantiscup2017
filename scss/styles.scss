@@ -8,15 +8,15 @@ body {
 }
 h1, h2, h3 {
   font-family: $font-heading;
-  color: $color-heading;
+  color: $color-red;
 }
-header {
+header {  
   padding-top: 40px;
     
   background-image: url(../assets/cover.png);
   background-size: cover; 
   
-  border-bottom: 1px rgb(221, 221, 221) solid;
+  border-bottom: 1px rgb(221,221,221) solid;
 }
 
 header ul.nav {
@@ -26,12 +26,10 @@ header ul.nav {
     color: white;
     text-transform: uppercase;
   }
-  li a:hover {
-    background-color: rgba(255,255,255,0.5);
-    border-color: rgba(255,255,255,0.5);
-  }
-  li a:hover, li.active a {
-    color: $color-normal;
+  li a:hover, li.a:active {
+    background-color: rgba(0,0,0,0.5);
+    border-color: transparent;
+    border-bottom-color: rgb(221,221,221);
   }
 }
 
@@ -41,10 +39,10 @@ table.table tr th {
 
 // Links and tooltips
 a {
-  color: $color-accent;
+  color: $color-blue;
 }
 a:hover, a:focus {
-  border-bottom: 1px $color-accent dotted;
+  color: $color-red;
 }
 [data-toggle="tooltip"]:hover {
   cursor: pointer;
@@ -54,6 +52,8 @@ a:hover, a:focus {
 img.logo {
   margin-bottom: 1em;
   height: 100px;
+  
+  @include filter(drop-shadow(0px 0px 5px white));
 }
 img.flag {
   margin-left: 4px;
@@ -72,6 +72,6 @@ img.flag {
 .right {
   text-align: right;
 }
-.text-success {
+.bold {
   font-weight: bold; 
 }

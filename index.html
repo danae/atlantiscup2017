@@ -2,10 +2,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=600">
+    <meta name="theme-color" content="#C83737">
     <title>Atlantis Cup 2017</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="shortcut icon" href="assets/icon.png">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/icon.png">
   </head>
   
   <body>
@@ -16,7 +20,7 @@
         <ul class="nav nav-tabs" id="tabs">
           <li class="active"><a href="#groepsfase" data-toggle="tab">Groepsfase</a></li>
           <li><a href="#knockoutfase" data-toggle="tab">Knock-outfase</a></li>
-          <li><a href="#rekentool" data-toggle="tab">Rekentool</a></li>
+          <!--<li><a href="#rekentool" data-toggle="tab">Rekentool</a></li>-->
         </ul>
       </div>
     </header>
@@ -25,14 +29,39 @@
       <div class="container">
         <div class="tab-content">
           <div class="tab-pane fade in active" id="groepsfase"></div>
+          
           <div class="tab-pane fade" id="knockoutfase"></div>
+          
           <div class="tab-pane fade" id="rekentool">
             <div class="row">
-             <div class="col-xs-4 col-xs-offset-2">
-                <select class="selectpicker teams" data-width="100%"></select>
-              </div>
-              <div class="col-xs-4">
-                <select class="selectpicker teams" data-width="100%"></select>
+              <div class="col-xs-8 col-xs-offset-2">
+                <h3>Rekentool</h3>
+                <p>
+                  Met behulp van deze rekentool kunnen de uitslagen van wedstrijden gesimuleerd worden. 
+                  Deze tool zal ook gebruikt worden voor het berekenen van de officiële uitslagen van de wedstrijden in de groepsfase en knock-outfase.
+                <p>
+ 
+                <form action="#rekentool" class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="control-label" >Team 1</label>
+                      <select class="form-control selectpicker" data-width="100%" id="team1"></select>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="control-label" >Team 2</label>
+                      <select class="form-control selectpicker" data-width="100%" id="team2"></select>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-12 center">
+                    <button type="button" id="simulate" class="btn btn-success">Start simulatie</button>  
+                  </div>
+                </form>
+                
+                <div id="simulation"></div>
               </div>
             </div>
           </div>
@@ -44,7 +73,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script src="js/model.js"></script>
-    <script src="js/model.simulation.js"></script>
+    <script src="js/simulation.js"></script>
     <script src="js/defs.js"></script>
   </body>
 </html>

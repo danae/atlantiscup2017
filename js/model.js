@@ -99,10 +99,11 @@ Match = function(data)
   if (typeof data !== 'object')
     throw 'Constructor data is no object, but ' + typeof data;
   
-  this.team1 = typeof data.team1 === 'string' ? new Team({name: data.team1}) : data.team1;
-  this.team2 = typeof data.team2 === 'string' ? new Team({name: data.team2}) : data.team2;
+  this.name = data.name || null;
   this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
   this.location = data.location;
+  this.team1 = typeof data.team1 === 'string' ? new Team({name: data.team1}) : data.team1;
+  this.team2 = typeof data.team2 === 'string' ? new Team({name: data.team2}) : data.team2;
   this.played = data.played || false;
 };
 
@@ -117,49 +118,44 @@ Match.prototype.winner = function()
     return null;
 }
 
-// Renders the score of the match
-Match.prototype.renderScore = function($el)
-{
-  $goals1 = $(document.createElement('span'))
-    .append(this.goals1);
-  if (this.goals1 > this.goals2)    
-    $goals1.addClass('text-success');
-    
-  $goals2 = $(document.createElement('span'))
-    .append(this.goals2);
-  if (this.goals2 > this.goals1)    
-    $goals2.addClass('text-success');
-  
-  $el
-    .append($goals1)
-    .append(" - ")
-    .append($goals2);
-};
-
 // Renders the match as a <tr>-element
 Match.prototype.renderAsRow = function($el)
 {
+  var $info = $(document.createElement('td'))
+    .addClass('active')
+    .append(this.name !== null ? this.name + ' &middot; ' : '')
+    .append('<span class="text-muted">' + this.date.formatDate() + '</span>')
+    .append(' &middot; ' + this.date.formatTime());
+  
   var $team1 = $(document.createElement('td'))
     .addClass('right')
     .css('width','30%')
     .append(this.team1.renderReverse());
   if (this.winner() === this.team1)
-    $team1.addClass('text-success');
+    $team1.addClass('text-success bold');
     
   var $score = $(document.createElement('td'))
     .addClass('center')
     .css('width','8%');
-  this.renderScore($score);
+  if (this.played)
+    $score
+      .append(this.goals1)
+      .append(" - ")
+      .append(this.goals2);
+  else
+    $score
+      .addClass('text-muted')
+      .append('<i>vs</i>');
     
   var $team2 = $(document.createElement('td'))
     .addClass('left')
     .css('width','30%')
     .append(this.team2.render());
   if (this.winner() === this.team2)
-    $team2.addClass('text-success');
+    $team2.addClass('text-success bold');
   
   var $row = $(document.createElement('tr'))
-    .append('<td class="active"><span class="text-muted">' + this.date.formatDate() + '</span> &middot; ' + this.date.formatTime() + '</td>')
+    .append($info)
     .append($team1)
     .append($score)
     .append($team2);
