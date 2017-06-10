@@ -1,11 +1,14 @@
 // Font imports
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
 
 // Color definitions
-$color-front:     #60606A;
-$color-back:      #F0F0FA;
-$color-accent:    #E0E0EA;
+$color-normal:    #101010;
+$color-heading:   #A02C2C;
+$color-accent:    #2C5AA0;
+$color-header:    #92b5e8;
+$light-red:       #c83737;
+$light-blue:      #3771c8;
 
 // Font definitions
-$font-normal:     'Lato', sans-serif;
-$font-heading:    'Lato', sans-serif;
+$font-normal:     'Motserrat', sans-serif;
+$font-heading:    'Motserrat', sans-serif;

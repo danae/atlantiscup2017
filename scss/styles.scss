@@ -1,33 +1,68 @@
 @import 'mixins';
 @import 'colors';
 
-* {
-  @include border-radius(0);
-  box-shadow: none;
-}
-
+// Fonts and colors
 body {
-  margin-top: 40px;
   font-family: $font-normal;
+  color: $color-normal;
 }
-h1, h2 {
+h1, h2, h3 {
   font-family: $font-heading;
+  color: $color-heading;
+}
+header {
+  padding-top: 40px;
+    
+  background-image: url(../assets/cover.png);
+  background-size: cover; 
+  
+  border-bottom: 1px rgb(221, 221, 221) solid;
 }
 
-th {
-  text-transform: uppercase;
+header ul.nav {
+  border: none;
+  
+  li a {
+    color: white;
+    text-transform: uppercase;
+  }
+  li a:hover {
+    background-color: rgba(255,255,255,0.5);
+    border-color: rgba(255,255,255,0.5);
+  }
+  li a:hover, li.active a {
+    color: $color-normal;
+  }
 }
 
+table.table tr th {
+  //background-color: $light-red;
+}
+
+// Links and tooltips
+a {
+  color: $color-accent;
+}
+a:hover, a:focus {
+  border-bottom: 1px $color-accent dotted;
+}
+[data-toggle="tooltip"]:hover {
+  cursor: pointer;
+}
+
+// Images
 img.logo {
+  margin-bottom: 1em;
   height: 100px;
 }
 img.flag {
   margin-left: 4px;
   margin-right: 4px;
-  margin-bottom: 2px;
-  border: 1px #CCC solid;
+  margin-bottom: 4px;
+  border: 0.5px #CCC solid;
 }
 
+// Alignment and other layout classes
 .left {
   text-align: left;
 }

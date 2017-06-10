@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=600">
+    <title>Atlantis Cup 2017</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  
+  <body>
+    <header>
+      <div class="container center">
+        <img class="logo" src="assets/logo.png" alt="Atlantis Cup 2017 Frankenland & Sustulia">
+        
+        <ul class="nav nav-tabs" id="tabs">
+          <li class="active"><a href="#groepsfase" data-toggle="tab">Groepsfase</a></li>
+          <li><a href="#knockoutfase" data-toggle="tab">Knock-outfase</a></li>
+          <li><a href="#rekentool" data-toggle="tab">Rekentool</a></li>
+        </ul>
+      </div>
+    </header>
+    
+    <main>
+      <div class="container">
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="groepsfase"></div>
+          <div class="tab-pane fade" id="knockoutfase"></div>
+          <div class="tab-pane fade" id="rekentool">
+            <div class="row">
+             <div class="col-xs-4 col-xs-offset-2">
+                <select class="selectpicker teams" data-width="100%"></select>
+              </div>
+              <div class="col-xs-4">
+                <select class="selectpicker teams" data-width="100%"></select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/model.simulation.js"></script>
+    <script src="js/defs.js"></script>
+  </body>
+</html>

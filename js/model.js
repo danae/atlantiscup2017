@@ -1,72 +1,121 @@
-Array.prototype.shuffle = function()
+//-----------------------------------------------------------------------------
+
+pad = function(number, width)
 {
-  var currentIndex = this.length, temporaryValue, randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = this[currentIndex];
-    this[currentIndex] = this[randomIndex];
-    this[randomIndex] = temporaryValue;
-  }
+  width -= number.toString().length;
+  if (width > 0)
+    return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+  return number + "";
 };
 
-rnd = function(bound)
+Date.prototype.isToday = function()
 {
-  return Math.floor((Math.random() * bound));
+  var today = new Date();
+  return Math.floor(this.getTime() / 86400000) === Math.floor(today.getTime() / 86400000);
+};
+
+Date.prototype.isTomorrow = function()
+{
+  var today = new Date();
+  return Math.floor(this.getTime() / 86400000) === Math.floor(today.getTime() / 86400000) + 1;
+};
+
+Date.prototype.formatDate = function()
+{
+  var days = ['ma','di','wo','do','vr','za','zo'];
+  var months = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+  
+  if (this.isToday())
+    return 'vandaag';
+  else if (this.isTomorrow())
+    return 'morgen';
+  else
+    return days[this.getDay()] + ' ' + this.getDate() + ' ' + months[this.getMonth()];
+};
+
+Date.prototype.formatTime = function()
+{
+  return pad(this.getHours(),2) + ':' + pad(this.getMinutes(),2);
 };
 
 //-----------------------------------------------------------------------------
 
 // Team class
-Team = function(code, name)
+Team = function(data)
 {
-  this.code = code;
-  this.name = name;
+  if (typeof data !== 'object')
+    throw 'Constructor data is no object, but ' + typeof data;
+  
+  this.name = data.name;
+  this.code = data.code || null;
+  this.factor = data.factor || 0;
+};
+
+// Returns an <img>-tag containing the flag for this team
+Team.prototype.image = function()
+{
+  var im = new Image(16,11);
+  im.src = 'https://atlantisgeo.nl/flags/' + this.code + '.png';
+  im.alt = this.code.toUpperCase();
+  im.className = 'flag';
+  return im;
 };
 
 // Renders the team name and flag
-Team.prototype.render = function($el, reverse)
+Team.prototype.render = function()
 {
-  if (typeof reverse === 'undefined')
-    reverse = false;
-  
-  var $img = $(document.createElement('img'))
-    .addClass('flag')
-    .attr('src','https://atlantisgeo.nl/flags/' + this.code + '.png');
-  
-  if (!reverse)
-  {
-    $el
-      .append($img)
+  if (this.code === null)
+    return $(document.createElement('span'))
+      .addClass('team')
+      .append('<i>' + this.name + '</i>');
+  else
+    return $(document.createElement('span'))
+      .addClass('team')
+      .append(this.image())
       .append(" ")
       .append(this.name);
-  }
-  else
-  {
-    $el
+};
+
+// Renders first the team name, then the flag
+Team.prototype.renderReverse = function()
+{
+  if (this.code === null)
+    return $(document.createElement('span'))
+      .addClass('team')
+      .append('<i>' + this.name + '</i>');
+  else    
+    return $(document.createElement('span'))
+      .addClass('team')
       .append(this.name)
       .append(" ")
-      .append($img);
-  }
+      .append(this.image());
 };
 
 //-----------------------------------------------------------------------------
 
 // Match class
-Match = function(schedule, team1, team2, goals1, goals2)
+Match = function(data)
 {
-  this.schedule = schedule;
-  this.team1 = team1;
-  this.team2 = team2;
-  this.goals1 = goals1;
-  this.goals2 = goals2;
+  if (typeof data !== 'object')
+    throw 'Constructor data is no object, but ' + typeof data;
+  
+  this.team1 = typeof data.team1 === 'string' ? new Team({name: data.team1}) : data.team1;
+  this.team2 = typeof data.team2 === 'string' ? new Team({name: data.team2}) : data.team2;
+  this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
+  this.location = data.location;
+  this.played = data.played || false;
 };
+
+// Returns the winner of this match
+Match.prototype.winner = function()
+{
+  if (this.goals1 > this.goals2)
+    return this.team1;
+  else if (this.goals1 < this.goals2)
+    return this.team2;
+  else
+    return null;
+}
 
 // Renders the score of the match
 Match.prototype.renderScore = function($el)
@@ -87,19 +136,63 @@ Match.prototype.renderScore = function($el)
     .append($goals2);
 };
 
-// Renders the match
-Match.prototype.render = function($el, singleLine)
+// Renders the match as a <tr>-element
+Match.prototype.renderAsRow = function($el)
 {
+  var $team1 = $(document.createElement('td'))
+    .addClass('right')
+    .css('width','30%')
+    .append(this.team1.renderReverse());
+  if (this.winner() === this.team1)
+    $team1.addClass('text-success');
+    
+  var $score = $(document.createElement('td'))
+    .addClass('center')
+    .css('width','8%');
+  this.renderScore($score);
+    
+  var $team2 = $(document.createElement('td'))
+    .addClass('left')
+    .css('width','30%')
+    .append(this.team2.render());
+  if (this.winner() === this.team2)
+    $team2.addClass('text-success');
   
+  var $row = $(document.createElement('tr'))
+    .append('<td class="active"><span class="text-muted">' + this.date.formatDate() + '</span> &middot; ' + this.date.formatTime() + '</td>')
+    .append($team1)
+    .append($score)
+    .append($team2);
+  $el.append($row);
+};
+
+// Renders the match as a <table>-element
+Match.prototype.renderAsTable = function()
+{
+  var $panel = $(document.createElement('div'))
+    .addClass('panel')
+    .addClass('panel-default');
+    
+  var $table = $(document.createElement('table'))
+    .addClass('table')
+    .addClass('table-condensed')
+    .addClass('table-hover');
+  this.renderAsRow($table);
+  $panel.append($table);
+  
+  return $panel;
 };
 
 //-----------------------------------------------------------------------------
 
 // Poule class
-Poule = function(teams, matches)
+Poule = function(data)
 {
-  this.teams = teams;
-  this.matches = matches.map(function(match)
+  if (typeof data !== 'object')
+    throw 'Constructor data is no object, but ' + typeof data;
+  
+  this.teams = data.teams;
+  this.matches = data.matches.map(function(match)
   {
     if (typeof match.team1 === 'number')
       match.team1 = this.teams[match.team1];
@@ -130,11 +223,11 @@ Poule.prototype.calculateStats = function()
   // Add statistics per match
   this.matches.forEach(function(match)
   {
+    if (!match.played)
+      return;
+    
     var t1 = match.team1;
     var t2 = match.team2;
-    
-    console.log(t1);
-    console.log(t2);
     
     // Played
     t1.stats.played ++;
@@ -174,136 +267,98 @@ Poule.prototype.calculateStats = function()
   // Sort the teams
   this.teams.sort(function(a, b)
   {
-    return b.stats.points - a.stats.points;
+    if (a.stats.played === 0 || b.stats.played === 0)
+      return 0;
+    
+    if (a.stats.points !== b.stats.points)
+      return b.stats.points - a.stats.points;
+    else if (a.stats.gd !== b.stats.gd)
+      return b.stats.gd - a.stats.gd;
+    else if (a.stats.gf !== b.stats.gf)
+      return b.stats.gf - a.stats.gf;
+    else
+      return b.factor - a.factor;
   });
 };
 
 // Renders the team table for this poule
-Poule.prototype.renderTeamTable = function($el)
+Poule.prototype.renderStats = function()
 {
+  // Panel as the table border
   var $panel = $(document.createElement('div'))
     .addClass('panel')
     .addClass('panel-default');
-  $el.append($panel);
     
+  // Table
   var $table = $(document.createElement('table'))
     .addClass('table')
-    .addClass('table-condensed');
+    .addClass('table-condensed')
+    .addClass('table-bordered');
   $panel.append($table);
   
+  // Table header
   var $header = $(document.createElement('tr'))
     .addClass('active')
-    .append('<th style="width: 36%;">Team</th>')
-    .append('<th style="width: 8%;"><abbr title="Wedstrijden gespeeld">P</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Wedstrijden gewonnen">W</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Wedstrijden gelijkgespeeld">T</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Wedstrijden verloren">L</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Doelpunten">GF</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Tegendoelpunten">GA</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Doelsaldo">GD</abbr></th>')
-    .append('<th style="width: 8%;"><abbr title="Puntentotaal">Pts</abbr></th>');
+    .append('<th></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Wedstrijden gespeeld">P</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Wedstrijden gewonnen">W</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Wedstrijden gelijkgespeeld">T</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Wedstrijden verloren">L</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Doelpunten">GF</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Tegendoelpunten">GA</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Doelsaldo">GD</span></th>')
+    .append('<th class="center" style="width: 8%;"><span data-toggle="tooltip" data-placement="top" title="Puntentotaal">Pts</span></th>');
   $table.append($header);
   
+  // Iterate over the teams
   this.teams.forEach(function(team, index)
   {
-    var $team = $(document.createElement('td'));
-    team.render($team);
+    var $team = $(document.createElement('td'))
+      .append(team.render());
     
+    // Table row for the team
     var $row = $(document.createElement('tr'))
       .append($team)
-      .append('<td>' + team.stats.played + '</td>')
-      .append('<td>' + team.stats.wins + '</td>')
-      .append('<td>' + team.stats.ties + '</td>')
-      .append('<td>' + team.stats.losses + '</td>')
-      .append('<td>' + team.stats.gf + '</td>')
-      .append('<td>' + team.stats.ga + '</td>')
-      .append('<td>' + team.stats.gd + '</td>')
-      .append('<td>' + team.stats.points + '</td>');
+      .append('<td class="center" style="font-weight: bold;">' + team.stats.played + '</td>')
+      .append('<td class="center">' + team.stats.wins + '</td>')
+      .append('<td class="center">' + team.stats.ties + '</td>')
+      .append('<td class="center">' + team.stats.losses + '</td>')
+      .append('<td class="center">' + team.stats.gf + '</td>')
+      .append('<td class="center">' + team.stats.ga + '</td>')
+      .append('<td class="center">' + team.stats.gd + '</td>')
+      .append('<td class="center" style="font-weight: bold;">' + team.stats.points + '</td>');
     if (team.stats.played === 3 && index < 2)
-      $row.addClass('success');
+      $row.addClass('info');
     $table.append($row);
   });
+  
+  // Return the panel
+  return $panel;
 };
 
 // Renders the match table for this poule
-Poule.prototype.renderMatchTable = function($el)
+Poule.prototype.renderMatches = function($el)
 {
-   var $panel = $(document.createElement('div'))
+  // Panel as the table border
+  var $panel = $(document.createElement('div'))
     .addClass('panel')
     .addClass('panel-default');
-  $el.append($panel);
     
+  // Table
   var $table = $(document.createElement('table'))
     .addClass('table')
-    .addClass('table-condensed');
+    .addClass('table-condensed')
+    .addClass('table-hover');
   $panel.append($table);
   
+  // Iterate over the matches
   this.matches.forEach(function(match)
   {
-    var $team1 = $(document.createElement('td'))
-      .addClass('right')
-      .css('width','30%');
-    match.team1.render($team1,true);
-    
-    var $score = $(document.createElement('td'))
-      .addClass('center')
-      .css('width','10%');
-    match.renderScore($score);
-    
-    var $team2 = $(document.createElement('td'))
-      .addClass('left')
-      .css('width','30%');
-    match.team2.render($team2);
-    
-    var $row = $(document.createElement('tr'))
-      .append('<td>' + match.schedule.location + '</td>')
-      .append($team1)
-      .append($score)
-      .append($team2);
-    $table.append($row);
+    match.renderAsRow($table);
   });
+  
+  // Return the panel
+  return $panel;
 };
 
 //-----------------------------------------------------------------------------
-
-$(function()
-{
-  var ts = [];
-  for (var code in teams)
-    ts.push(teams[code]);
-  ts.shuffle();
-  
-  for (var i = 0; i < 8; i ++)
-  {
-    poules[i + 1] = new Poule([
-      ts[4*i],
-      ts[4*i + 1],
-      ts[4*i + 2],
-      ts[4*i + 3]
-    ],[
-      new Match({date: "2017-07-01T14:00", location: "Rabensburgh"},0,1,rnd(5),rnd(5)),
-      new Match({date: "2017-07-01T16:00", location: "Osprossenburgh"},2,3,rnd(5),rnd(5)),
-      new Match({date: "2017-07-01T14:00", location: "Rabensburgh"},0,2,rnd(5),rnd(5)),
-      new Match({date: "2017-07-01T16:00", location: "Osprossenburgh"},1,3,rnd(5),rnd(5)),
-      new Match({date: "2017-07-01T14:00", location: "Rabensburgh"},2,1,rnd(5),rnd(5)),
-      new Match({date: "2017-07-01T14:00", location: "Osprossenburgh"},3,0,rnd(5),rnd(5))
-    ])
-  }
-  
-  console.log(teams);
-  console.log(poules);
-  
-  for (var code in poules)
-  {
-    var poule = poules[code];
-    
-    var $col = $(document.createElement('div'))
-      .addClass('col-md-6')
-      .append('<h3>Poule ' + code + '</h3>');
-      
-    poule.renderTeamTable($col);
-    poule.renderMatchTable($col);
-    
-    $('div#content').append($col);
-  }
-});
