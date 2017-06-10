@@ -19,24 +19,6 @@ header {
   border-bottom: 1px rgb(221,221,221) solid;
 }
 
-header ul.nav {
-  border: none;
-  
-  li a {
-    color: white;
-    text-transform: uppercase;
-  }
-  li a:hover, li.a:active {
-    background-color: rgba(0,0,0,0.5);
-    border-color: transparent;
-    border-bottom-color: rgb(221,221,221);
-  }
-}
-
-table.table tr th {
-  //background-color: $light-red;
-}
-
 // Links and tooltips
 a {
   color: $color-blue;
@@ -46,6 +28,23 @@ a:hover, a:focus {
 }
 [data-toggle="tooltip"]:hover {
   cursor: pointer;
+}
+
+// Nav tabs
+header ul.nav {
+  border: none;
+  
+  li {
+    a {
+      color: white;
+      text-transform: uppercase;
+    }
+    a:hover, a:focus {
+      background-color: rgba(0,0,0,0.5);
+      border-color: transparent;
+      border-bottom-color: rgb(221,221,221);
+    }
+  }
 }
 
 // Images
