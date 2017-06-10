@@ -102,21 +102,25 @@ Match = function(data)
   this.name = data.name || null;
   this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
   this.location = data.location;
-  this.team1 = typeof data.team1 === 'string' ? new Team({name: data.team1}) : data.team1;
-  this.team2 = typeof data.team2 === 'string' ? new Team({name: data.team2}) : data.team2;
-  this.played = data.played || false;
+  this.teams = data.teams.map(function(team)
+  {
+    return typeof team === 'string' ? new Team({name: team}) : team;
+  });
+  this.score = data.score || null;
 };
 
 // Returns the winner of this match
 Match.prototype.winner = function()
 {
-  if (this.goals1 > this.goals2)
-    return this.team1;
-  else if (this.goals1 < this.goals2)
-    return this.team2;
+  if (this.score === null)
+    return null;
+  else if (this.score[0] > this.score[1])
+    return this.teams[0];
+  else if (this.score[0] < this.score[1])
+    return this.teams[1];
   else
     return null;
-}
+};
 
 // Renders the match as a <tr>-element
 Match.prototype.renderAsRow = function($el)
@@ -130,18 +134,18 @@ Match.prototype.renderAsRow = function($el)
   var $team1 = $(document.createElement('td'))
     .addClass('right')
     .css('width','30%')
-    .append(this.team1.renderReverse());
-  if (this.winner() === this.team1)
+    .append(this.teams[0].renderReverse());
+  if (this.winner() === this.teams[0])
     $team1.addClass('text-success bold');
     
   var $score = $(document.createElement('td'))
     .addClass('center')
     .css('width','8%');
-  if (this.played)
+  if (this.score !== null)
     $score
-      .append(this.goals1)
+      .append(this.score[0])
       .append(" - ")
-      .append(this.goals2);
+      .append(this.score[1]);
   else
     $score
       .addClass('text-muted')
@@ -150,8 +154,8 @@ Match.prototype.renderAsRow = function($el)
   var $team2 = $(document.createElement('td'))
     .addClass('left')
     .css('width','30%')
-    .append(this.team2.render());
-  if (this.winner() === this.team2)
+    .append(this.teams[1].render());
+  if (this.winner() === this.teams[1])
     $team2.addClass('text-success bold');
   
   var $row = $(document.createElement('tr'))
@@ -171,8 +175,7 @@ Match.prototype.renderAsTable = function()
     
   var $table = $(document.createElement('table'))
     .addClass('table')
-    .addClass('table-condensed')
-    .addClass('table-hover');
+    .addClass('table-condensed');
   this.renderAsRow($table);
   $panel.append($table);
   
@@ -190,14 +193,26 @@ Poule = function(data)
   this.teams = data.teams;
   this.matches = data.matches.map(function(match)
   {
-    if (typeof match.team1 === 'number')
-      match.team1 = this.teams[match.team1];
-    if (typeof match.team2 === 'number')
-      match.team2 = this.teams[match.team2];
+    if (typeof match.teams[0] === 'number')
+      match.teams[0] = this.teams[match.teams[0]];
+    if (typeof match.teams[1] === 'number')
+      match.teams[1] = this.teams[match.teams[1]];
     return match;
   }.bind(this));
   
   this.calculateStats();
+};
+
+// Returns how many matches are played
+Poule.prototype.totalPlayed = function()
+{
+  var played = 0;
+  this.matches.forEach(function(match)
+  {
+    if (match.score !== null)
+      played ++;
+  });
+  return played;
 };
 
 // Determine the team statistics
@@ -219,23 +234,23 @@ Poule.prototype.calculateStats = function()
   // Add statistics per match
   this.matches.forEach(function(match)
   {
-    if (!match.played)
+    if (match.score === null)
       return;
     
-    var t1 = match.team1;
-    var t2 = match.team2;
+    var t1 = match.teams[0];
+    var t2 = match.teams[1];
     
     // Played
     t1.stats.played ++;
     t2.stats.played ++;
     
     // Score
-    if (match.goals1 > match.goals2)
+    if (match.score[0] > match.score[1])
     {
       t1.stats.wins ++;
       t2.stats.losses ++;
     }
-    else if (match.goals1 < match.goals2)
+    else if (match.score[0] < match.score[1])
     {
       t1.stats.losses ++;
       t2.stats.wins ++;
@@ -247,10 +262,10 @@ Poule.prototype.calculateStats = function()
     }
       
     // Goals
-    t1.stats.gf += match.goals1;
-    t1.stats.ga += match.goals2;
-    t2.stats.gf += match.goals1;
-    t2.stats.ga += match.goals1;
+    t1.stats.gf += match.score[0];
+    t1.stats.ga += match.score[1];
+    t2.stats.gf += match.score[1];
+    t2.stats.ga += match.score[0];
   });
   
   // Add the points and goal delta to the statistics
@@ -321,19 +336,19 @@ Poule.prototype.renderStats = function()
       .append('<td class="center">' + team.stats.losses + '</td>')
       .append('<td class="center">' + team.stats.gf + '</td>')
       .append('<td class="center">' + team.stats.ga + '</td>')
-      .append('<td class="center">' + team.stats.gd + '</td>')
+      .append('<td class="center">' + (team.stats.gd > 0 ? '+' : '') + team.stats.gd + '</td>')
       .append('<td class="center" style="font-weight: bold;">' + team.stats.points + '</td>');
-    if (team.stats.played === 3 && index < 2)
+    if (this.totalPlayed() === 6 && index < 2)
       $row.addClass('info');
     $table.append($row);
-  });
+  }.bind(this));
   
   // Return the panel
   return $panel;
 };
 
 // Renders the match table for this poule
-Poule.prototype.renderMatches = function($el)
+Poule.prototype.renderMatches = function()
 {
   // Panel as the table border
   var $panel = $(document.createElement('div'))
@@ -343,8 +358,7 @@ Poule.prototype.renderMatches = function($el)
   // Table
   var $table = $(document.createElement('table'))
     .addClass('table')
-    .addClass('table-condensed')
-    .addClass('table-hover');
+    .addClass('table-condensed');
   $panel.append($table);
   
   // Iterate over the matches
