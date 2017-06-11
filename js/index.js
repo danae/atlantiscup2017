@@ -7,7 +7,7 @@ teams = {
   ard: new Team({code: "ard", name: "Ardeim", factor: 76}),
   atr: new Team({code: "atr", name: "Atrokije", factor: 89}),
   kbl: new Team({code: "kbl", name: "Benjiland", factor: 85}),
-  rbu: new Team({code: "rbu", name: "Burghteland", factor: 71}),
+  rbu: new Team({code: "rbu", name: "Burghteland", factor: 70}),
   car: new Team({code: "car", name: "Carthamië", factor: 98}),
   cyl: new Team({code: "cyl", name: "Cylenië", factor: 89}),
   dum: new Team({code: "dum", name: "Dumerië", factor: 82}),
@@ -40,15 +40,15 @@ teams = {
 
 // Poule definitions
 poules = {
-  A: new Poule({teams: [teams.rfl,teams.anv,teams.ard,teams.hmk], matches: [
-    new Match({date: "2017-07-01T16:30", location: "Rabensburgh", teams: [0,1]}),
-    new Match({date: "2017-07-01T19:00", location: "Osprossenburgh", teams: [2,3]}),
-    new Match({date: "2017-07-06T19:00", location: "Rabensburgh", teams: [0,2]}),
-    new Match({date: "2017-07-07T14:00", location: "Osprossenburgh", teams: [1,3]}),
-    new Match({date: "2017-07-12T16:30", location: "Rabensburgh", teams: [2,1]}),
-    new Match({date: "2017-07-12T16:30", location: "Osprossenburgh", teams: [3,0]})
+  A: new Poule({name: 'A', teams: [teams.rfl,teams.anv,teams.ard,teams.hmk], matches: [
+    new Match({date: "2017-07-01T16:30", location: "Rabensburgh", teams: [0,1], score: [1,0]}),
+    new Match({date: "2017-07-01T19:00", location: "Osprossenburgh", teams: [2,3], score: [1,1]}),
+    new Match({date: "2017-07-06T19:00", location: "Rabensburgh", teams: [0,2], score: [3,0]}),
+    new Match({date: "2017-07-07T14:00", location: "Osprossenburgh", teams: [1,3], score: [0,2]}),
+    new Match({date: "2017-07-12T16:30", location: "Rabensburgh", teams: [2,1], score: [2,4]}),
+    new Match({date: "2017-07-12T16:30", location: "Osprossenburgh", teams: [3,0], score: [2,0]})
   ]}),
-  B: new Poule({teams: [teams.sus,teams.vtm,teams.fno,teams.sol], matches: [
+  B: new Poule({name: 'B', teams: [teams.sus,teams.vtm,teams.fno,teams.sol], matches: [
     new Match({date: "2017-07-02T14:00", location: "Lubah-Neutalhavn", teams: [0,1]}),
     new Match({date: "2017-07-02T16:30", location: "Brimmerhavn", teams: [2,3]}),
     new Match({date: "2017-07-07T16:30", location: "Lubah-Neutalhavn", teams: [0,2]}),
@@ -56,7 +56,7 @@ poules = {
     new Match({date: "2017-07-12T19:00", location: "Lubah-Neutalhavn", teams: [2,1]}),
     new Match({date: "2017-07-12T19:00", location: "Brimmerhavn", teams: [3,0]})
   ]}),
-  C: new Poule({teams: [teams.une,teams.rod,teams.edu,teams.img], matches: [
+  C: new Poule({name: 'C', teams: [teams.une,teams.rod,teams.edu,teams.img], matches: [
     new Match({date: "2017-07-02T19:00", location: "Osprossenburgh", teams: [0,1]}),
     new Match({date: "2017-07-03T14:00", location: "Brimmerhavn", teams: [2,3]}),
     new Match({date: "2017-07-07T16:30", location: "Osprossenburgh", teams: [0,2]}),
@@ -64,7 +64,7 @@ poules = {
     new Match({date: "2017-07-13T16:30", location: "Osprossenburgh", teams: [2,1]}),
     new Match({date: "2017-07-13T16:30", location: "Brimmerhavn", teams: [3,0]})
   ]}),
-  D: new Poule({teams: [teams.car,teams.rth,teams.nad,teams.rng], matches: [
+  D: new Poule({name: 'D', teams: [teams.car,teams.rth,teams.nad,teams.rng], matches: [
     new Match({date: "2017-07-03T16:30", location: "Lubah-Neutalhavn", teams: [0,1]}),
     new Match({date: "2017-07-03T19:00", location: "Rabensburgh", teams: [2,3]}),
     new Match({date: "2017-07-08T19:00", location: "Lubah-Neutalhavn", teams: [0,2]}),
@@ -72,7 +72,7 @@ poules = {
     new Match({date: "2017-07-13T19:00", location: "Lubah-Neutalhavn", teams: [2,1]}),
     new Match({date: "2017-07-13T19:00", location: "Rabensburgh", teams: [3,0]})
   ]}),
-  E: new Poule({teams: [teams.atr,teams.rai,teams.kva,teams.mal], matches: [
+  E: new Poule({name: 'E', teams: [teams.atr,teams.rai,teams.kva,teams.mal], matches: [
     new Match({date: "2017-07-04T14:00", location: "Fortiporta", teams: [0,1]}),
     new Match({date: "2017-07-04T16:30", location: "Urbalongi", teams: [2,3]}),
     new Match({date: "2017-07-09T16:30", location: "Fortiporta", teams: [0,2]}),
@@ -80,7 +80,7 @@ poules = {
     new Match({date: "2017-07-14T16:30", location: "Fortiporta", teams: [2,1]}),
     new Match({date: "2017-07-14T16:30", location: "Urbalongi", teams: [3,0]})
   ]}),
-  F: new Poule({teams: [teams.cyl,teams.for,teams.dum,teams.rzd], matches: [
+  F: new Poule({name: 'F', teams: [teams.cyl,teams.for,teams.dum,teams.rzd], matches: [
     new Match({date: "2017-07-04T19:00", location: "Harena", teams: [0,1]}),
     new Match({date: "2017-07-05T14:00", location: "Isdera", teams: [2,3]}),
     new Match({date: "2017-07-10T14:00", location: "Harena", teams: [0,2]}),
@@ -88,7 +88,7 @@ poules = {
     new Match({date: "2017-07-14T19:00", location: "Harena", teams: [2,1]}),
     new Match({date: "2017-07-14T19:00", location: "Isdera", teams: [3,0]})
   ]}),
-  G: new Poule({teams: [teams.brs,teams.txe,teams.rbu,teams.cqx], matches: [
+  G: new Poule({name: 'G', teams: [teams.brs,teams.txe,teams.rbu,teams.cqx], matches: [
     new Match({date: "2017-07-05T16:30", location: "Urbalongi", teams: [0,1]}),
     new Match({date: "2017-07-05T19:00", location: "Isdera", teams: [2,3]}),
     new Match({date: "2017-07-10T19:00", location: "Urbalongi", teams: [0,2]}),
@@ -96,7 +96,7 @@ poules = {
     new Match({date: "2017-07-15T16:30", location: "Urbalongi", teams: [2,1]}),
     new Match({date: "2017-07-15T16:30", location: "Isdera", teams: [3,0]})
   ]}),
-  H: new Poule({teams: [teams.pag,teams.khy,teams.vgr,teams.kbl], matches: [
+  H: new Poule({name: 'H', teams: [teams.pag,teams.khy,teams.vgr,teams.kbl], matches: [
     new Match({date: "2017-07-06T14:00", location: "Harena", teams: [0,1]}),
     new Match({date: "2017-07-06T16:30", location: "Fortiporta", teams: [2,3]}),
     new Match({date: "2017-07-11T16:30", location: "Harena", teams: [0,2]}),
@@ -110,35 +110,35 @@ poules = {
 
 // Eight final definitions
 eightFinals = [
-  new Match({name: "A1", date: "2017-07-17T15:00", location: "Brimmerhavn", teams: ['1e groep A','2e groep H']}),
-  new Match({name: "A2", date: "2017-07-17T19:00", location: "Rabensburgh", teams: ['1e groep B','2e groep G']}),
-  new Match({name: "A3", date: "2017-07-18T15:00", location: "Lubah-Neutalhavn", teams: ['1e groep C','2e groep E']}),
-  new Match({name: "A4", date: "2017-07-18T19:00", location: "Osprossenburgh", teams: ['1e groep D','2e groep F']}),
-  new Match({name: "A5", date: "2017-07-19T15:00", location: "Isdera", teams: ['1e groep E','2e groep D']}),
-  new Match({name: "A6", date: "2017-07-19T19:00", location: "Fortiporta", teams: ['1e groep F','2e groep C']}),
-  new Match({name: "A7", date: "2017-07-20T15:00", location: "Harena", teams: ['1e groep G','2e groep A']}),
-  new Match({name: "A8", date: "2017-07-20T19:00", location: "Urbalongi", teams: ['1e groep H','2e groep B']})
+  new Match({name: "A1", date: "2017-07-17T15:00", location: "Brimmerhavn", teams: [poules.A.winners[0],poules.H.winners[1]]}),
+  new Match({name: "A2", date: "2017-07-17T19:00", location: "Rabensburgh", teams: [poules.B.winners[0],poules.G.winners[1]]}),
+  new Match({name: "A3", date: "2017-07-18T15:00", location: "Lubah-Neutalhavn", teams: [poules.C.winners[0],poules.E.winners[1]]}),
+  new Match({name: "A4", date: "2017-07-18T19:00", location: "Osprossenburgh", teams: [poules.D.winners[0],poules.F.winners[1]]}),
+  new Match({name: "A5", date: "2017-07-19T15:00", location: "Isdera", teams: [poules.E.winners[0],poules.D.winners[1]]}),
+  new Match({name: "A6", date: "2017-07-19T19:00", location: "Fortiporta", teams: [poules.F.winners[0],poules.C.winners[1]]}),
+  new Match({name: "A7", date: "2017-07-20T15:00", location: "Harena", teams: [poules.G.winners[0],poules.A.winners[1]]}),
+  new Match({name: "A8", date: "2017-07-20T19:00", location: "Urbalongi", teams: [poules.H.winners[0],poules.B.winners[1]]})
 ];
   
 // Quarter final definitions
 quarterFinals = [
-  new Match({name: "K1", date: "2017-07-22T19:00", location: "Osprossenburgh", teams: ['Winnaar A1','Winnaar A5']}),
-  new Match({name: "K2", date: "2017-07-23T19:00", location: "Urbalongi", teams: ['Winnaar A2','Winnaar A6']}),
-  new Match({name: "K3", date: "2017-07-24T19:00", location: "Brimmerhavn", teams: ['Winnaar A3','Winnaar A7']}),
-  new Match({name: "K4", date: "2017-07-25T19:00", location: "Isdera", teams: ['Winnaar A4','Winnaar A8']})
+  new Match({name: "K1", date: "2017-07-22T19:00", location: "Osprossenburgh", teams: [eightFinals[0].winner,eightFinals[4].winner]}),
+  new Match({name: "K2", date: "2017-07-23T19:00", location: "Urbalongi", teams: [eightFinals[1].winner,eightFinals[5].winner]}),
+  new Match({name: "K3", date: "2017-07-24T19:00", location: "Brimmerhavn", teams: [eightFinals[2].winner,eightFinals[6].winner]}),
+  new Match({name: "K4", date: "2017-07-25T19:00", location: "Isdera", teams: [eightFinals[3].winner,eightFinals[7].winner]})
 ];
   
 // Half final definitions
 halfFinals = [
-  new Match({name: "H1", date: "2017-07-27T19:00", location: "Lubah-Neutalhavn", teams: ['Winnaar K1','Winnaar K3']}),
-  new Match({name: "H2", date: "2017-07-28T19:00", location: "Harena", teams: ['Winnaar K2','Winnaar K4']})
+  new Match({name: "H1", date: "2017-07-27T19:00", location: "Lubah-Neutalhavn", teams: [quarterFinals[0].winner,quarterFinals[2].winner]}),
+  new Match({name: "H2", date: "2017-07-28T19:00", location: "Harena", teams: [quarterFinals[1].winner,quarterFinals[3].winner]})
 ];
   
 // Bronze final definition
-bronzeFinal = new Match({date: "2017-07-30T19:00", location: "Rabensburgh", teams: ['Verliezer H2','Verliezer H1']});
+bronzeFinal = new Match({date: "2017-07-30T19:00", location: "Rabensburgh", teams: [halfFinals[1].loser,halfFinals[0].loser]});
   
 // Final definition
-final = new Match({date: "2017-07-31T19:00", location: "Fortiporta", teams: ['Winnaar H1','Winnaar H2']});
+final = new Match({date: "2017-07-31T19:00", location: "Fortiporta", teams: [halfFinals[0].winner,halfFinals[1].winner]});
 
 //-----------------------------------------------------------------------------
 
@@ -156,7 +156,7 @@ $(function()
     
     var $poule = $(document.createElement('div'))
       .addClass('col-md-6')
-      .append('<h3>Groep ' + code + '</h3>')
+      .append('<h3>Groep ' + poule.name + '</h3>')
       .append(poule.renderStats())
       .append(poule.renderMatches());
     $poules.append($poule);
@@ -270,7 +270,6 @@ $(function()
   }
   
   // Tooltips and other classes on load 
-  //$('.selectpicker').selectpicker();
   $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -282,7 +281,7 @@ $('#simulate').click(function(e)
   var team1 = $('#team1').val();
   var team2 = $('#team2').val();
   
-  var simulation = new Simulation(teams[team1],teams[team2]);
+  var simulation = new Simulation({teams: [teams[team1],teams[team2]]});
   simulation.simulate();
   
   $('#simulation')
@@ -292,20 +291,19 @@ $('#simulate').click(function(e)
 
 //-----------------------------------------------------------------------------
 
-// Javascript to enable link to tab
-var url = document.location.toString();
-if (url.match('#')) 
+// Enable link to tab
+/*var hash = window.location.hash;
+if (hash.match('#'))
+  $('.nav-tabs a[href="#' + hash.split('#')[1] + '"]').tab('show');
+  
+// Change hash for page-reload
+$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab',function(e) 
 {
-  $('.nav-tabs a[href="#' + url.split('#')[1]+'"]').tab('show');
-} ;
-
-// With HTML5 history API, we can easily prevent scrolling!
-$('.nav-tabs a').on('shown.bs.tab',function(e) 
-{
+  var 
   if (history.pushState)
-    history.pushState(null, null, e.target.hash); 
+    history.pushState(null,null,e.target.hash); 
   else
     window.location.hash = e.target.hash;
-});
+});*/
 
 //-----------------------------------------------------------------------------
