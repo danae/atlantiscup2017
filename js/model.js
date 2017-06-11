@@ -263,9 +263,6 @@ Poule = function(data)
     return match;
   }.bind(this));
   
-  // Amount of played matches
-  this.played = 0;
-  
   // Winner and loser
   this.winners = [
     new Team({name: '1e groep ' + this.name}),
@@ -290,6 +287,9 @@ Poule.prototype.resolveTeam = function(team)
 // Calculate the team statistics
 Poule.prototype.calculate = function()
 {
+  // Amount of played matches
+  this.played = 0;
+  
   // Initialize the statistics per team
   for (var i = 0; i < this.teams.length; i++)
   {
@@ -424,7 +424,7 @@ Poule.prototype.renderStats = function()
       .append('<td class="center">' + team.goalsAgainst + '</td>')
       .append('<td class="center">' + (team.goalsDelta > 0 ? '+' : '') + team.goalsDelta + '</td>')
       .append('<td class="center" style="font-weight: bold;">' + team.points + '</td>');
-    if (this.played === this.matches.l && index < 2)
+    if (this.played === this.matches.length && index < 2)
       $row.addClass('info');
     $table.append($row);
   }.bind(this));
@@ -532,6 +532,9 @@ Simulation.isGoalAgainstScored = function(number, diff)
 // Simulate the score of this match
 Simulation.prototype.simulate = function()
 {
+  // The match is played
+  this.match.played = true;
+  
   // Calculate the team factors
   this.factors = [
     this.match.teams[0].factor + Simulation.dice(20),

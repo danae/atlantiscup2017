@@ -41,12 +41,12 @@ teams = {
 // Poule definitions
 poules = {
   A: new Poule({name: 'A', teams: [teams.rfl,teams.anv,teams.ard,teams.hmk], matches: [
-    new Match({date: "2017-07-01T16:30", location: "Rabensburgh", teams: [0,1], score: [1,0]}),
-    new Match({date: "2017-07-01T19:00", location: "Osprossenburgh", teams: [2,3], score: [1,1]}),
-    new Match({date: "2017-07-06T19:00", location: "Rabensburgh", teams: [0,2], score: [3,0]}),
-    new Match({date: "2017-07-07T14:00", location: "Osprossenburgh", teams: [1,3], score: [0,2]}),
-    new Match({date: "2017-07-12T16:30", location: "Rabensburgh", teams: [2,1], score: [2,4]}),
-    new Match({date: "2017-07-12T16:30", location: "Osprossenburgh", teams: [3,0], score: [2,0]})
+    new Match({date: "2017-07-01T16:30", location: "Rabensburgh", teams: [0,1]}),
+    new Match({date: "2017-07-01T19:00", location: "Osprossenburgh", teams: [2,3]}),
+    new Match({date: "2017-07-06T19:00", location: "Rabensburgh", teams: [0,2]}),
+    new Match({date: "2017-07-07T14:00", location: "Osprossenburgh", teams: [1,3]}),
+    new Match({date: "2017-07-12T16:30", location: "Rabensburgh", teams: [2,1]}),
+    new Match({date: "2017-07-12T16:30", location: "Osprossenburgh", teams: [3,0]})
   ]}),
   B: new Poule({name: 'B', teams: [teams.sus,teams.vtm,teams.fno,teams.sol], matches: [
     new Match({date: "2017-07-02T14:00", location: "Lubah-Neutalhavn", teams: [0,1]}),
