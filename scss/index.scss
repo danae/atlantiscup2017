@@ -61,6 +61,26 @@ img.flag {
   border: 0.5px #CCC solid;
 }
 
+// Modals
+div.modal-header, div.modal-body {
+  padding: 10px 15px; 
+  
+  p {
+    margin: 0px;
+  }
+}
+div.modal-content table.table {
+  margin-bottom: 0px;
+}
+h4.modal-title {
+  margin: -4px 0px;
+}
+
+// Tables
+table.table {
+  font-size: 14px;
+}
+
 // Alignment and other layout classes
 .left {
   text-align: left;
@@ -73,4 +93,7 @@ img.flag {
 }
 .bold {
   font-weight: bold; 
+}
+table.table.borderless td, table.table.borderless th {
+  border: none;
 }

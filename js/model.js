@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 
 // Utilility variables and functions
-Util = function(){};
+Util = function Util(){};
 
 // Pad a number with leading zeroes
 Util.pad = function(number, width)
@@ -115,6 +115,9 @@ Match = function(data)
     return typeof team === 'string' ? new Team({name: team}) : team;
   });
   this.score = data.score || null;
+  this.penalties = data.penalties || [0,0];
+  this.yellows = data.yellows || [0,0];
+  this.reds = data.reds || [0,0];
   
   // Played or not
   this.played = this.score !== null;
@@ -122,6 +125,7 @@ Match = function(data)
   // Winner and loser
   this.winner = new Team({name: 'Winnaar' + (this.name !== null ? ' ' + this.name : '')});
   this.loser = new Team({name: 'Verliezer' + (this.name !== null ? ' ' + this.name : '')});
+  this.tie = false;
   
   // Calculate the match statistics
   this.calculate();
@@ -147,8 +151,23 @@ Match.prototype.calculate = function()
   }
   else
   {
-    this.winner = null;
-    this.loser = null;
+    // Penalties
+    if (this.penalties[0] > this.penalties[1])
+    {
+      this.winner = this.teams[0];
+      this.loser = this.teams[1];
+    }
+    else if (this.penalties[0] < this.penalties[1])
+    {
+      this.loser = this.teams[0];
+      this.winner = this.teams[1];
+    }
+    else
+    {
+      this.winner = null;
+      this.loser = null;
+      this.tie = true;
+    }
   }
 };
 
@@ -221,7 +240,12 @@ Match.prototype.renderAsRow = function()
     .append(this.renderInfo())
     .append(this.renderFirstTeam())
     .append(this.renderScore())
-    .append(this.renderSecondTeam());
+    .append(this.renderSecondTeam())
+    .css('cursor','pointer')
+    .click(function(e)
+    {
+      this.renderModal().modal();
+    }.bind(this));
 };
 
 // Renders the match as a <table>-element
@@ -236,11 +260,108 @@ Match.prototype.renderAsTable = function()
   var $table = $(document.createElement('table'))
     .addClass('table')
     .addClass('table-condensed')
+    .addClass('table-hover')
     .append(this.renderAsRow());
   $panel.append($table);
   
   // Return the panel
   return $panel;
+};
+
+// Renders a modal containing the detailed match info
+Match.prototype.renderModal = function()
+{
+  // Modal
+  var $modal = $(document.createElement('div'))
+    .addClass('modal fade')
+    .attr('tabindex',-1);
+    
+  // Modal dialog
+  var $dialog = $(document.createElement('div'))
+    .addClass('modal-dialog');
+  $modal.append($dialog);
+    
+  // Modal content
+  var $content = $(document.createElement('div'))
+    .addClass('modal-content');
+  $dialog.append($content);
+  
+  // Modal header
+  var $header = $(document.createElement('div'))
+    .addClass('modal-header');
+  $content.append($header);
+  
+  var $score = $(document.createElement('h4'))
+    .addClass('modal-title bold');
+  if (this.played)
+    $score.append(this.score[0]).append(" - ").append(this.score[1]).append(this.penalties[0] > 0 || this.penalties[1] > 0 ? " (" + this.penalties[0] + " - " + this.penalties[1] + ")" : "");
+  else
+    $score.addClass('text-muted').append('<i>vs</i>');
+  
+  // Table
+  var $table = $(document.createElement('table'))
+    .addClass('table')
+    .addClass('table-condensed')
+    .addClass('borderless');
+  $header.append($table);
+    
+  // Team factors
+  var $row = $(document.createElement('tr'))
+    .append('<td class="right" style="width: 35%;"><h4 class="modal-title">' + this.teams[0].name + '</h4></td>')
+    .append($(document.createElement('td')).addClass('center').css('width','30%').append($score))
+    .append('<td class="left" style="width: 35%;"><h4 class="modal-title">' + this.teams[1].name + '</h4></td>');
+  $table.append($row);
+  
+  if (this.played)
+  {
+    // Table
+    var $table = $(document.createElement('table'))
+      .addClass('table')
+      .addClass('table-condensed')
+      .addClass('borderless');
+    $content.append($table);
+  
+    // Goals
+    var $rowGoals = $(document.createElement('tr'))
+      .append('<td class="right" style="width: 35%;">' + this.score[0] + '</td>')
+      .append('<td class="center" style="width: 30%;">Doelpunten</td>')
+      .append('<td class="left" style="width: 35%;">' + this.score[1] + '</td>');
+    $table.append($rowGoals);
+    
+    // Penalties
+    if (this.penalties[0] > 0 || this.penalties[1] > 0)
+    {
+      var $rowPenalties = $(document.createElement('tr'))
+        .append('<td class="right" style="width: 35%;">' + this.penalties[0] + '</td>')
+        .append('<td class="center" style="width: 30%;">Strafschoppen</td>')
+        .append('<td class="left" style="width: 35%;">' + this.penalties[1] + '</td>');
+      $table.append($rowPenalties);
+    }
+    
+    // Yellows
+    var $rowYellows = $(document.createElement('tr'))
+      .append('<td class="right" style="width: 35%;">' + this.yellows[0] + '</td>')
+      .append('<td class="center text-warning" style="width: 30%;">Gele kaarten</td>')
+      .append('<td class="left" style="width: 35%;">' + this.yellows[1] + '</td>');
+    $table.append($rowYellows);
+    
+    // Reds
+    var $rowReds = $(document.createElement('tr'))
+      .append('<td class="right" style="width: 35%;">' + this.reds[0] + '</td>')
+      .append('<td class="center text-danger" style="width: 30%;">Rode kaarten</td>')
+      .append('<td class="left" style="width: 35%;">' + this.reds[1] + '</td>');
+    $table.append($rowReds);
+  }
+  
+  // Modal body  
+  var $body = $(document.createElement('div'))
+    .addClass('modal-body')
+    .append('<p class="pull-right"><i class="fa fa-map-marker"></i> ' + locations[this.location] + ', ' + this.location + '</p>')
+    .append('<p><i class="fa fa-clock-o"></i> ' + this.date.formatDate() + ' &middot; ' + this.date.formatTime() + '</p>');
+  $content.append($body);
+  
+  // Return the modal
+  return $modal;
 };
 
 //-----------------------------------------------------------------------------
@@ -320,7 +441,7 @@ Poule.prototype.calculate = function()
     match.teams[1].played ++;
     
     // Wins, ties and losses
-    if (match.score[0] === match.score[1])
+    if (match.tie)
     {
       match.teams[0].ties ++;
       match.teams[1].ties ++;
@@ -445,6 +566,7 @@ Poule.prototype.renderMatches = function()
   var $table = $(document.createElement('table'))
     .addClass('table')
     .addClass('table-condensed')
+    .addClass('table-hover');
   $panel.append($table);
   
   // Iterate over the matches
